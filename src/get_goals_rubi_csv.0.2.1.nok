@@ -20,7 +20,7 @@ typedef struct {
 } Pace;
 
 typedef struct{
-    char timestamp[21]; // e.g. 2014-03-08T12:15:26Z
+    char timestamp[21]; // 21 Chars from csv
     float pos_lat;
     float pos_long;
     float alt;
