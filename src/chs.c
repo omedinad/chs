@@ -7,18 +7,18 @@ static int verbose_flag;
 
 
 int main (int argc , char ** argv){
-    int c;
-    Pace pace;
-    int target_hr;
     FILE *fd, *fd_out;
-	char *file_bytes;
-	size_t file_size = 0;
-	float hr_at_pace = 0;
+    Pace pace;
 	Pace pace_at_hr = {0,0,0};
     Pace total_pace_at_hr = {0,0,0};
-    int nr_of_files = 0;
-    float sum_of_paces = 0;
+	char *file_bytes;
+	float hr_at_pace = 0;
     float sum_of_hrs = 0;
+    float sum_of_paces = 0;
+    int c;
+    int nr_of_files = 0;
+    int target_hr;
+	size_t file_size = 0;
     
     fd_out = stdout;
     
