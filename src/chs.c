@@ -80,8 +80,14 @@ int main (int argc , char ** argv){
                 break;
                 
             case 'o':
-                fprintf (stderr, "Option -o with value `%s'\nOutput to file not yet implemented.\n", optarg);
-                fd_out = stderr;
+                
+                fd_out = fopen(optarg, "w");
+                if (fd_out == NULL){
+                    fprintf(stderr, "Could not open %s (errno=%d)", optarg, errno);
+                }else{
+                    fprintf (stderr, "Writing output to %s\n", optarg);
+                }
+                
                 break;
                 
             case '?':
@@ -164,6 +170,10 @@ int main (int argc , char ** argv){
         fprintf(fd_out,
                 "%.1f\t%s\t%d files\n",
                 (sum_of_hrs/(float)nr_of_files),pace_to_str(&total_pace_at_hr), nr_of_files);
+        if(fd_out != stdout){
+            fflush(fd_out);
+            fclose(fd_out);
+        }
         
     } else{
         fprintf(stderr, "Parameters missing, use: <HR> <PACE(mm:ss.ds)> <file>\n");
