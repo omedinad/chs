@@ -34,10 +34,7 @@ int main (int argc, char ** argv) {
     int hr_lines = 0;
     int p_lines = 0;
 
-    fd_out = stdout;
-
-    while (1) {
-        static struct option long_options[] ={
+    static struct option long_options[] ={
             /* These options set a flag. */
             {"verbose", no_argument,       &verbose_flag, 1},
             {"brief",   no_argument,       &verbose_flag, 0},
@@ -49,6 +46,11 @@ int main (int argc, char ** argv) {
             {"test",         required_argument, 0, 't'},
             {0, 0, 0, 0}
         };
+    
+    fd_out = stdout;
+
+    while (1) {
+        
         /* getopt_long stores the option index here. */
         int option_index = 0;
         
@@ -188,7 +190,17 @@ int main (int argc, char ** argv) {
         }
         
     } else{
-        fprintf(stderr, "Parameters missing, use: <HR> <PACE(mm:ss.ds)> <file>\n");
+        fprintf(stderr, "Parameters missing, use:\n%s [options] <-h <target HR>> <-p <target pace>>  <file>\n", argv[0]);
+        for(int opt=0;;opt++){
+            if (long_options[opt].name != NULL ){
+                fprintf(stderr, "\t--%s", long_options[opt].name);
+                if (long_options[opt].has_arg == required_argument){
+                    fprintf(stderr, "|-%c\t<argument>\n", (char)long_options[opt].val);
+                }else{
+                    fprintf(stderr, "\n");
+                }
+            }else break;
+        }
 		return(-1);
     }
     
