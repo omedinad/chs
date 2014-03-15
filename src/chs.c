@@ -1,6 +1,6 @@
 /*
  *
- * Reads a CVS file, searches the first line for fields
+ * Reads a CSV file, searches the first line for fields
  * called heartrate, distance and time and iterates over 
  * every row calculating the pace and hr averages for the 
  * corresponding target heartrate and target pace specified
