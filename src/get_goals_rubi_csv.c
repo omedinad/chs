@@ -81,7 +81,7 @@ float pace_to_float(const Pace * pace){
     return (float)pace->min + ((float)pace->sec/60);
 }
 
-int computeValues(float * hratp, Pace * pathr, char * bytes, const size_t * len, const int * target_hr, const Pace * target_pace ){
+int computeValues(int * lines, float * hratp, Pace * pathr, char * bytes, const size_t * len, const int * target_hr, const Pace * target_pace ){
 	
     int hratp_counter = 0;
     float hratp_sum = 0;
@@ -206,6 +206,7 @@ int computeValues(float * hratp, Pace * pathr, char * bytes, const size_t * len,
     
     // printf("Pace stats avg pace: %.2f\n", pathr_sum/pathr_counter);
     float_to_Pace(pathr, pathr_sum/pathr_counter);
+    *lines = line_nr;
     *hratp = (float)hr_sum/(float)hr_count;
     
     

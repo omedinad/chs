@@ -29,7 +29,8 @@ int main (int argc , char ** argv){
     int c;
     int nr_of_files = 0;
     int target_hr;
-	size_t file_size = 0;
+        size_t file_size = 0;
+        int lines = 0;
     
     fd_out = stdout;
     
@@ -159,8 +160,8 @@ int main (int argc , char ** argv){
             
             // fprintf(stderr, "%lu bytes read from %s\n", file_size, argv[f_index]);
             
-            if(computeValues(&hr_at_pace, &pace_at_hr, file_bytes, &file_size, &target_hr, &pace) > 0){
-                fprintf(fd_out, "%.1f\t%s\t%s(%dK)\n",  hr_at_pace,pace_to_str(&pace_at_hr), argv[optind], (int)file_size/1024);
+            if(computeValues(&lines, &hr_at_pace, &pace_at_hr, file_bytes, &file_size, &target_hr, &pace) > 0){
+                fprintf(fd_out, "%.1f\t%s\t%s(%dK, %d Records)\n",  hr_at_pace,pace_to_str(&pace_at_hr), argv[optind], (int)file_size/1024, lines);
                 sum_of_hrs += hr_at_pace;
                 sum_of_paces += pace_to_float(&pace_at_hr);
             }else{
