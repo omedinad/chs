@@ -17,6 +17,6 @@ char * pace_to_str( Pace * );
 int get_field_number(const char * , const char * , int );
 void float_to_Pace(Pace * , float );
 float pace_to_float(const Pace * );
-int computeValues(int *, float * , Pace * , char * , const size_t * , const int * , const Pace *  );
+int computeValues(int *, float * , int*, Pace * , int*, char * , const size_t * , const int * , const Pace *  );
 
 #endif

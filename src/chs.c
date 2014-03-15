@@ -17,27 +17,27 @@ static int verbose_flag;
 
 
 
-int main (int argc , char ** argv){
+int main (int argc, char ** argv) {
     FILE *fd, *fd_out;
     Pace pace;
-	Pace pace_at_hr = {0,0,0};
-    Pace total_pace_at_hr = {0,0,0};
-	char *file_bytes;
-	float hr_at_pace = 0;
+    Pace pace_at_hr = {0, 0, 0};
+    Pace total_pace_at_hr = {0, 0, 0};
+    char *file_bytes;
+    float hr_at_pace = 0;
     float sum_of_hrs = 0;
     float sum_of_paces = 0;
     int c;
     int nr_of_files = 0;
     int target_hr;
-        size_t file_size = 0;
-        int lines = 0;
-    
+    size_t file_size = 0;
+    int lines = 0;
+    int hr_lines = 0;
+    int p_lines = 0;
+
     fd_out = stdout;
-    
-    while (1)
-    {
-        static struct option long_options[] =
-        {
+
+    while (1) {
+        static struct option long_options[] ={
             /* These options set a flag. */
             {"verbose", no_argument,       &verbose_flag, 1},
             {"brief",   no_argument,       &verbose_flag, 0},
@@ -160,8 +160,8 @@ int main (int argc , char ** argv){
             
             // fprintf(stderr, "%lu bytes read from %s\n", file_size, argv[f_index]);
             
-            if(computeValues(&lines, &hr_at_pace, &pace_at_hr, file_bytes, &file_size, &target_hr, &pace) > 0){
-                fprintf(fd_out, "%.1f\t%s\t%s(%dK, %d Records)\n",  hr_at_pace,pace_to_str(&pace_at_hr), argv[optind], (int)file_size/1024, lines);
+            if(computeValues(&lines, &hr_at_pace, &hr_lines, &pace_at_hr, &p_lines, file_bytes, &file_size, &target_hr, &pace) > 0){
+                fprintf(fd_out, "%.1f(%d)\t%s(%d)\t%s(%dK, %d Records)\n",  hr_at_pace, hr_lines,pace_to_str(&pace_at_hr),p_lines, argv[optind], (int)file_size/1024, lines);
                 sum_of_hrs += hr_at_pace;
                 sum_of_paces += pace_to_float(&pace_at_hr);
             }else{

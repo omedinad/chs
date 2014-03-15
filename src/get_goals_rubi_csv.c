@@ -81,7 +81,15 @@ float pace_to_float(const Pace * pace){
     return (float)pace->min + ((float)pace->sec/60);
 }
 
-int computeValues(int * lines, float * hratp, Pace * pathr, char * bytes, const size_t * len, const int * target_hr, const Pace * target_pace ){
+int computeValues(int * lines,
+        float * hratp, 
+        int * hr_lines,
+        Pace * pathr,
+        int * p_lines,
+        char * bytes, 
+        const size_t * len, 
+        const int * target_hr, 
+        const Pace * target_pace ){
 	
     int hratp_counter = 0;
     float hratp_sum = 0;
@@ -208,6 +216,8 @@ int computeValues(int * lines, float * hratp, Pace * pathr, char * bytes, const 
     float_to_Pace(pathr, pathr_sum/pathr_counter);
     *lines = line_nr;
     *hratp = (float)hr_sum/(float)hr_count;
+    *hr_lines = hr_count;
+    *p_lines = pathr_counter;
     
     
     
