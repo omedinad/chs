@@ -9,7 +9,7 @@ TARGET=chs
 SRC_DIR=src/
 
 ODIR=obj/
-BIN_DIR=../
+BIN_DIR=./
 
 LIBS= -lc #-lm -lnet
 
