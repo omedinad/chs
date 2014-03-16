@@ -11,10 +11,7 @@
 
 #include <getopt.h>
 #include <get_goals_rubi_csv.h>
-
-/* Flag set by ‘--verbose’. */
-static int verbose_flag;
-
+#include <chs_debug.h>
 
 
 int main (int argc, char ** argv) {
@@ -78,7 +75,7 @@ int main (int argc, char ** argv) {
                 break;
                 
             case 'h':
-                // fprintf (stderr, "option -h with value `%s'\n", optarg);
+                verbose("option -h has value '%s'\n", optarg);
                 if((target_hr=validate_str_HR(optarg)) == 0){
                     fprintf(stderr, "Bad parameter <HR>\n");
                     return(-1);
@@ -119,7 +116,7 @@ int main (int argc, char ** argv) {
     /* Print any remaining command line arguments (not options). */
     if (optind < argc)
     {
-        fprintf(stderr, "Target HR: %d\n", target_hr);
+        verbose("Target HR: %d\n", target_hr);
         fprintf(stderr, "Target Pace(%s): %s\n", (validate_str_time(argv[2], &pace)>0?"OK":"NOK"), pace_to_str(&pace));
         
         fprintf(fd_out, "HR at\tPace at\tFile\n");

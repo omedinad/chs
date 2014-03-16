@@ -16,7 +16,7 @@ LIBS= -lc #-lm -lnet
 _DEPS = get_goals_rubi_csv.h # hellomake.h
 DEPS = $(patsubst %,$(IDIR)%,$(_DEPS))
 
-_OBJ =  get_goals_rubi_csv.o chs.o
+_OBJ =  get_goals_rubi_csv.o chs.o chs_debug.o
 OBJ = $(patsubst %,$(ODIR)%,$(_OBJ))
 
 
