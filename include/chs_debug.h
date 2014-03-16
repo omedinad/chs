@@ -15,9 +15,11 @@
 extern "C" {
 #endif
 
-/* Flag set by ‘--verbose’. */
-int verbose_flag;
-void verbose(const char * format, ...) ;
+    /* Flag set by ‘--verbose’. */
+
+    int verbose_flag;
+
+    void verbose(const char * format, ...);
 
 
 #ifdef	__cplusplus

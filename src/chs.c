@@ -13,6 +13,104 @@
 #include <get_goals_rubi_csv.h>
 #include <chs_debug.h>
 
+void showHelp(const struct option * long_options, const char * name) {
+    fprintf(stderr, "Parameters missing, use:\n%s [options] <-h <target HR>> <-p <target pace>>  <file>\n", name);
+    for (int opt = 0;; opt++) {
+        if (long_options[opt].name != NULL) {
+            fprintf(stderr, "\t--%s", long_options[opt].name);
+            if (long_options[opt].has_arg == required_argument) {
+                fprintf(stderr, "|-%c\t\t<argument>\n", (char) long_options[opt].val);
+            } else {
+                fprintf(stderr, "\n");
+            }
+        } else break;
+    }
+}
+
+int processArguments(const int * argc,
+        char * const * argv,
+        const struct option * long_options,
+        FILE * fd_out,
+        int * target_hr1,
+        int * target_hr2,
+        Pace * t_pace1,
+        Pace * t_pace2) {
+    int c;
+    while (1) {
+
+        /* getopt_long stores the option index here. */
+        int option_index = 0;
+
+        c = getopt_long(*argc, argv, "h:p:o:",
+                long_options, &option_index);
+
+        /* Detect the end of the options. */
+        if (c == -1)
+            break;
+
+        switch (c) {
+            case 0:
+                /* If this option set a flag, do nothing else now. */
+                if (long_options[option_index].flag != 0)
+                    break;
+                printf("option %s", long_options[option_index].name);
+                if (optarg)
+                    printf(" with arg %s", optarg);
+                printf("\n");
+                break;
+
+            case 't':
+                puts("option -t\n");
+                break;
+
+            case 'h':
+                verbose("option -h has value '%s'\n", optarg);
+                if ((*target_hr1 = validate_str_HR(optarg)) == 0) {
+                    fprintf(stderr, "Bad parameter <HR>\n");
+                    return (-1);
+                }
+                break;
+
+            case 'H':
+                break;
+
+            case 'p':
+                // fprintf (stderr, "option -p with value `%s'\n", optarg);
+                if (validate_str_time(optarg, t_pace1) <= 0) {
+                    fprintf(stderr, "Bad parameter <PACE(mm:ss.ds)>\n");
+                    return (-1);
+                }
+                break;
+
+            case 'P':
+                break;
+
+            case 'o':
+
+                fd_out = fopen(optarg, "w");
+                if (fd_out == NULL) {
+                    fprintf(stderr, "Could not open %s (errno=%d)", optarg, errno);
+                } else {
+                    fprintf(stderr, "Writing output to %s\n", optarg);
+                }
+
+                break;
+
+            case '?':
+                /* getopt_long already printed an error message. */
+                break;
+
+            default:
+                abort();
+        }
+    }
+
+    if (verbose_flag)
+        puts("Verbosity is on.");
+
+    return(0);
+}
+
 
 int main (int argc, char ** argv) {
     FILE *fd, *fd_out;
@@ -23,7 +121,7 @@ int main (int argc, char ** argv) {
     float hr_at_pace = 0;
     float sum_of_hrs = 0;
     float sum_of_paces = 0;
-    int c;
+    
     int nr_of_files = 0;
     int target_hr;
     size_t file_size = 0;
@@ -38,7 +136,9 @@ int main (int argc, char ** argv) {
             /* These options don't set a flag.
              We distinguish them by their indices. */
             {"heartrate",   required_argument, 0, 'h'},
+            {"heartrate-range",   required_argument, 0, 'H'},
             {"pace",        required_argument, 0, 'p'},
+            {"pace-range",        required_argument, 0, 'P'},
             {"out",         required_argument, 0, 'o'},
             {"test",         required_argument, 0, 't'},
             {0, 0, 0, 0}
@@ -46,72 +146,7 @@ int main (int argc, char ** argv) {
     
     fd_out = stdout;
 
-    while (1) {
-        
-        /* getopt_long stores the option index here. */
-        int option_index = 0;
-        
-        c = getopt_long (argc, argv, "h:p:o:",
-                         long_options, &option_index);
-        
-        /* Detect the end of the options. */
-        if (c == -1)
-            break;
-        
-        switch (c)
-        {
-            case 0:
-                /* If this option set a flag, do nothing else now. */
-                if (long_options[option_index].flag != 0)
-                    break;
-                printf ("option %s", long_options[option_index].name);
-                if (optarg)
-                    printf (" with arg %s", optarg);
-                printf ("\n");
-                break;
-                
-            case 't':
-                puts ("option -t\n");
-                break;
-                
-            case 'h':
-                verbose("option -h has value '%s'\n", optarg);
-                if((target_hr=validate_str_HR(optarg)) == 0){
-                    fprintf(stderr, "Bad parameter <HR>\n");
-                    return(-1);
-                }
-                break;
-            
-            case 'p':
-                // fprintf (stderr, "option -p with value `%s'\n", optarg);
-                if( validate_str_time(optarg, &pace)<=0){
-                    fprintf(stderr, "Bad parameter <PACE(mm:ss.ds)>\n");
-                    return(-1);
-                }
-                break;
-                
-            case 'o':
-                
-                fd_out = fopen(optarg, "w");
-                if (fd_out == NULL){
-                    fprintf(stderr, "Could not open %s (errno=%d)", optarg, errno);
-                }else{
-                    fprintf (stderr, "Writing output to %s\n", optarg);
-                }
-                
-                break;
-                
-            case '?':
-                /* getopt_long already printed an error message. */
-                break;
-                
-            default:
-                abort ();
-        }
-    }
-    
-    if (verbose_flag)
-        puts ("verbose flag is set");
+    processArguments(&argc, argv, long_options, fd_out, &target_hr, 0, &pace, 0);
     
     /* Print any remaining command line arguments (not options). */
     if (optind < argc)
@@ -185,23 +220,12 @@ int main (int argc, char ** argv) {
             fflush(fd_out);
             fclose(fd_out);
         }
-        
-    } else{
-        fprintf(stderr, "Parameters missing, use:\n%s [options] <-h <target HR>> <-p <target pace>>  <file>\n", argv[0]);
-        for(int opt=0;;opt++){
-            if (long_options[opt].name != NULL ){
-                fprintf(stderr, "\t--%s", long_options[opt].name);
-                if (long_options[opt].has_arg == required_argument){
-                    fprintf(stderr, "|-%c\t<argument>\n", (char)long_options[opt].val);
-                }else{
-                    fprintf(stderr, "\n");
-                }
-            }else break;
-        }
-		return(-1);
+
+    } else {
+        showHelp(long_options, argv[0]);
+        return (-1);
     }
-    
-    exit (0);
+    exit(0);
 }
 
 
