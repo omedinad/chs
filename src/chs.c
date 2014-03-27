@@ -230,6 +230,7 @@ int main (int argc, char ** argv) {
                 nr_of_files--; // If we can't open a file, we skip it!
             }
             
+            head = *((Sample *)malloc(sizeof(Sample)));
             free(file_bytes);
             optind++;
         }
