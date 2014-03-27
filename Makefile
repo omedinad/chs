@@ -11,7 +11,7 @@ SRC_DIR=src/
 ODIR=obj/
 BIN_DIR=./
 
-LIBS= -lc #-lm -lnet
+LIBS= -lc -lm #-lm -lnet
 
 _DEPS = get_goals_rubi_csv.h # hellomake.h
 DEPS = $(patsubst %,$(IDIR)%,$(_DEPS))

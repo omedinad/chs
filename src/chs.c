@@ -125,10 +125,19 @@ int main (int argc, char ** argv) {
     int nr_of_files = 0;
     int target_hr;
     size_t file_size = 0;
-    int lines = 0;
+    // int lines = 0;
     int hr_lines = 0;
     int p_lines = 0;
+    int h_lines =0;
 
+    int l_count, l_test;
+    Sample head;
+    float window[] = {0.1, 0.2, 0.4, 0.2, 0.1};
+    int window_len = 5;
+    
+    float f_pace;
+    
+    
     static struct option long_options[] ={
             /* These options set a flag. */
             {"verbose", no_argument,       &verbose_flag, 1},
@@ -193,11 +202,26 @@ int main (int argc, char ** argv) {
             }
             
             // fprintf(stderr, "%lu bytes read from %s\n", file_size, argv[f_index]);
+            // loadValues(int *count , Sample * head, char * bytes,  const size_t * len)
+            // head = NULL;
+            l_count = 0;
+            l_test = loadValues(&l_count, &head, file_bytes, &file_size);
+            verbose("l_test: %d\tl_count: %d\n", l_test, l_count);
             
-            if(computeValues(&lines, &hr_at_pace, &hr_lines, &pace_at_hr, &p_lines, file_bytes, &file_size, &target_hr, &pace) > 0){
-                fprintf(fd_out, "%.1f(%d)\t%s(%d)\t%s(%dK, %d Records)\n",  hr_at_pace, hr_lines,pace_to_str(&pace_at_hr),p_lines, argv[optind], (int)file_size/1024, lines);
+            // To DO: Make this optional
+            lowPassHR(&head, window, &window_len);
+            
+            // TODO: Pass tolerance as parameter or a a range from command line
+            p_lines = average_pace_at_HR(&head, &target_hr,1 , &f_pace);
+            float_to_Pace(&pace_at_hr, f_pace);
+            
+            h_lines = average_hr_at_Pace(&head, &pace, 0.01, &hr_at_pace);
+            
+            //computeValues(&lines, &hr_at_pace, &hr_lines, &pace_at_hr, &p_lines, file_bytes, &file_size, &target_hr, &pace)
+            if(p_lines > 0){
+                fprintf(fd_out, "%.1f(%d)\t%s(%d)\t%s(%dK, %d Records)\n",  hr_at_pace, h_lines,pace_to_str(&pace_at_hr),p_lines, argv[optind], (int)file_size/1024, l_count);
                 sum_of_hrs += hr_at_pace;
-                sum_of_paces += pace_to_float(&pace_at_hr);
+                sum_of_paces += f_pace;
             }else{
                 fprintf(stderr, "Error processing file %s (errno = %d)\n", argv[optind], errno);
                 if (errno == EINVAL){
