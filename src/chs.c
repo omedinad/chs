@@ -163,8 +163,8 @@ int main (int argc, char ** argv) {
         verbose("Target HR: %d\n", target_hr);
         fprintf(stderr, "Target Pace(%s): %s\n", (validate_str_time(argv[2], &pace)>0?"OK":"NOK"), pace_to_str(&pace));
         
-        fprintf(fd_out, "HR at\tPace at\tFile\n");
-        fprintf(fd_out, "%s\t%d\tName\n", pace_to_str(&pace), target_hr);
+        fprintf(fd_out, "HR at\t\tPace at\t\tFile\n");
+        fprintf(fd_out, "%s\t\t%d\t\tName\n", pace_to_str(&pace), target_hr);
         fprintf(fd_out, "-----------------------\n");
         
         // "non-option ARGV-elements: "
@@ -227,7 +227,7 @@ int main (int argc, char ** argv) {
                 if (errno == EINVAL){
                     fprintf(stderr, "\tIncorrect or incompatible first line. No usable fields found.\n");
                 }
-                nr_of_files--; // If we can't open a file, we skip it!
+                nr_of_files--; // If we can't open a file, we skip it!!
             }
             
             head = *((Sample *)malloc(sizeof(Sample)));
