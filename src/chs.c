@@ -160,8 +160,6 @@ int main(int argc, char ** argv) {
     int nr_of_files = 0;
     int target_hr;
     size_t file_size = 0;
-    // int lines = 0;
-    // int hr_lines = 0;
     int p_lines = 0;
     int h_lines = 0;
 
@@ -172,7 +170,6 @@ int main(int argc, char ** argv) {
     int window_len = 5;
 
     float f_pace;
-
 
     static struct option long_options[] = {
         /* These options set a flag. */
@@ -211,10 +208,6 @@ int main(int argc, char ** argv) {
                 continue;
             }
             
-
-            // fprintf(stderr, "%lu bytes read from %s\n", file_size, argv[f_index]);
-            // loadValues(int *count , Sample * head, char * bytes,  const size_t * len)
-            // head = NULL;
             l_count = 0;
             l_test = loadValues(&l_count, &head, file_bytes, &file_size);
             verbose("l_test: %d\tl_count: %d\n", l_test, l_count);
@@ -229,7 +222,7 @@ int main(int argc, char ** argv) {
             // TODO: Pass Tolerance factor as a parameter
             h_lines = average_hr_at_Pace(&head, &pace, 0.01, &hr_at_pace);
 
-            //computeValues(&lines, &hr_at_pace, &hr_lines, &pace_at_hr, &p_lines, file_bytes, &file_size, &target_hr, &pace)
+            // TODO: Review this validation... it used to be related to a parsing error...
             if (p_lines > 0) {
                 fprintf(fd_out, "%.1f(%d)\t%s(%d)\t%s(%dK, %d Records)\n", hr_at_pace, h_lines, pace_to_str(&pace_at_hr), p_lines, argv[optind], (int) file_size / 1024, l_count);
                 sum_of_hrs += hr_at_pace;
