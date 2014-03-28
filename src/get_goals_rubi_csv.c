@@ -71,8 +71,14 @@ int get_field_number(const char * field_name, const char * buffer, int len) {
 }
 
 void float_to_Pace(Pace * pace, float fpace) {
+    float f_temp;
+    int i_temp;
     pace->min = (int) fpace;
-    pace->sec = (int) ((fpace - (float) pace->min) * (float) 60);
+    f_temp = ((fpace - (float) pace->min) * (float) 60);
+    i_temp = (int) f_temp;
+    pace->sec =  i_temp;
+    f_temp = (f_temp - (float)i_temp)*100;
+    pace->dec = (int)f_temp;
 }
 
 float pace_to_float(const Pace * pace) {
