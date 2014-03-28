@@ -82,7 +82,7 @@ void float_to_Pace(Pace * pace, float fpace) {
 }
 
 float pace_to_float(const Pace * pace) {
-    return (float) pace->min + ((float) pace->sec / 60);
+    return (float) pace->min + ((float) pace->sec / 60) + (((float) pace->dec)/100);
 }
 
 int loadValues(int *count, Sample * head, char * bytes, const size_t * len) {
