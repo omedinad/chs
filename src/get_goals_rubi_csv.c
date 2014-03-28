@@ -276,7 +276,6 @@ int average_pace_at_HR(Sample * head, const int * target_hr, int hr_tolerance, f
     return p_lines;
 }
 
-
 int average_hr_at_Pace(Sample * head, const Pace * target_pace, float tolerance_factor, float * hr_at_pace){
     Sample * current_sample;
     Pace temp_min, temp_max;

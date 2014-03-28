@@ -132,7 +132,8 @@ int main (int argc, char ** argv) {
 
     int l_count, l_test;
     Sample head;
-    float window[] = {0.1, 0.2, 0.4, 0.2, 0.1};
+    // TODO: Add menu of Kernel generators as a parameter
+    float window[] = {0.010333864010783912, 0.20756120714779008, 0.564209857682852, 0.20756120714779008, 0.010333864010783912}; //Norm sigma = 0.5
     int window_len = 5;
     
     float f_pace;
@@ -165,7 +166,7 @@ int main (int argc, char ** argv) {
         
         fprintf(fd_out, "HR at\t\tPace at\t\tFile\n");
         fprintf(fd_out, "%s\t\t%d\t\tName\n", pace_to_str(&pace), target_hr);
-        fprintf(fd_out, "-----------------------\n");
+        fprintf(fd_out, "----------------------------------------------\n");
         
         // "non-option ARGV-elements: "
         while (optind < argc){
@@ -208,13 +209,14 @@ int main (int argc, char ** argv) {
             l_test = loadValues(&l_count, &head, file_bytes, &file_size);
             verbose("l_test: %d\tl_count: %d\n", l_test, l_count);
             
-            // To DO: Make this optional
+            // TODO: Make this optional
             lowPassHR(&head, window, &window_len);
             
             // TODO: Pass tolerance as parameter or a a range from command line
             p_lines = average_pace_at_HR(&head, &target_hr,1 , &f_pace);
             float_to_Pace(&pace_at_hr, f_pace);
             
+            // TODO: Pass Tolerance factor as a parameter
             h_lines = average_hr_at_Pace(&head, &pace, 0.01, &hr_at_pace);
             
             //computeValues(&lines, &hr_at_pace, &hr_lines, &pace_at_hr, &p_lines, file_bytes, &file_size, &target_hr, &pace)
@@ -230,6 +232,7 @@ int main (int argc, char ** argv) {
                 nr_of_files--; // If we can't open a file, we skip it!!
             }
             
+            // TODO: Enable/Disable this line with a "Cumulative" Switch.
             head = *((Sample *)malloc(sizeof(Sample)));
             free(file_bytes);
             optind++;
@@ -237,7 +240,7 @@ int main (int argc, char ** argv) {
         
         float_to_Pace(&total_pace_at_hr, sum_of_paces/(float)nr_of_files);
         
-        fprintf(fd_out, "-----------------------\n");
+        fprintf(fd_out, "----------------------------------------------\n");
         fprintf(fd_out,
                 "%.1f\t%s\t%d files\n",
                 (sum_of_hrs/(float)nr_of_files),pace_to_str(&total_pace_at_hr), nr_of_files);
