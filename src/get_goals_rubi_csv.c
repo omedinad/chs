@@ -320,6 +320,7 @@ int average_hr_at_Pace(Sample * head, const Pace * target_pace, float tolerance_
     return h_lines;
 }
 
+
 int computeValues(int * lines,
         float * hratp,
         int * hr_lines,
